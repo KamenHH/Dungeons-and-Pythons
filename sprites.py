@@ -6,9 +6,25 @@ class Sprite:
         self._max_mana = mana
         # self._curr_position = curr_position
 
-    def __repr__(self):
-        """For debugging.."""
-        return ', '.join([str((k, v)) for k, v in self.__dict__.items()])
+    # def __repr__(self):
+    #     """For debugging.."""
+    #     return ', '.join([str((k, v)) for k, v in self.__dict__.items()])
+
+    @property
+    def x_coord(self):
+        return self._x
+    
+    @x_coord.setter
+    def x_coord(self, coord):
+        self._x = coord
+
+    @property
+    def y_coord(self):
+        return self._y
+    
+    @y_coord.setter
+    def y_coord(self, coord):
+        self._y = coord
 
     @property
     def max_health(self):
@@ -28,11 +44,11 @@ class Sprite:
 
     def is_alive(self):
         """Returns true if current health is greater than 0."""
-        return True if self._curr_health > 0 else False
+        return self._curr_health > 0
 
     def can_cast(self, spell_cost):
         """Returns true if current mana is greater than 0."""
-        return True if self._curr_mana > spell_cost else False
+        return self._curr_mana > spell_cost 
 
     def take_damage(self, damage):
         """Decreases sprite's health based on the given damage factor."""
@@ -74,6 +90,10 @@ class Sprite:
                 self.spend_mana(mana_cost)
         return damage
 
+    def update_cords(self, new_y, new_x):
+        self.y_coord = new_y
+        self.x_coord = new_x
+
     # def move(self, direction):
     #     """Move sprite in one of 4 possible directions.
     #         Adds, the coordinates of the new position to those of the current one."""
@@ -84,8 +104,9 @@ class Sprite:
     #                   'left': (0, -1)
     #                   }
     #     new_direction = directions.get(direction, (0, 0))
-    #     self._curr_position[0] += new_direction[0]
-    #     self._curr_position[1] += new_direction[1]
+    #     self.y_coord += new_direction[0]
+    #     self.x_coord += new_direction[1]
+
 
 
 class Hero(Sprite):
@@ -135,12 +156,14 @@ if __name__ == '__main__':
     print(h.__dict__)
     # print(h.is_alive())
     # print(h.known_as())
-    import time
-    while True:
-        h.take_healing(21)
-        print(h.get_health())
-        time.sleep(0.5)
-        print(h.is_alive())
+    # import time
+    # while True:
+    #     h.take_healing(21)
+    #     print(h.get_health())
+    #     time.sleep(0.5)
+    #     print(h.is_alive())
+    h.x_coord = 10
+    print(h.x_coord)    
 
 
 

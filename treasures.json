@@ -1,0 +1,35 @@
+[
+    {
+        "type" : "Weapon",
+        "name": "Axe",
+        "damage": 20,
+        "scope": 1
+    },{
+        "type" : "Weapon",
+        "name": "Bow",
+        "damage": 10,
+        "scope": 2
+    },{
+        "type" : "Spell",
+        "name": "Fireball",
+        "damage": 20,
+        "scope": 1,
+        "mana_cost": 20
+    },{
+        "type" : "Spell",
+        "name": "Blizzard",
+        "damage": 20,
+        "scope": 1,
+        "mana_cost": 20
+    },{
+        "type" : "Potion",
+        "name": "Health potion",
+        "health_amount": 25,
+        "mana_amount": 20
+    },{
+        "type" : "Potion",
+        "name": "Health potion",
+        "health_amount": 25,
+        "mana_potion": 20
+    }
+]
