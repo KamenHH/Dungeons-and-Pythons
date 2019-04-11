@@ -25,11 +25,11 @@
         "type" : "Potion",
         "name": "Health potion",
         "health_amount": 25,
-        "mana_amount": 20
+        "mana_amount": 0
     },{
         "type" : "Potion",
-        "name": "Health potion",
-        "health_amount": 25,
-        "mana_potion": 20
+        "name": "Mana potion",
+        "health_amount": 0,
+        "mana_amount": 20
     }
 ]
