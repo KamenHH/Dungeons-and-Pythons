@@ -1,6 +1,6 @@
 import os
-
-
+import pdb
+from collectables import TreasureChest, Potion, Weapon, Spell
 class Map:
     LEVELS_PATH = 'Levels'
     DIRECTIONS = {
@@ -48,6 +48,7 @@ class Map:
             return False
         try:
             if self.map[new_y][new_x] == Map.FREE_SPACE:
+                pdb.set_trace()
                 self.map[prev_y_hero][prev_x_hero] = Map.FREE_SPACE
                 self.map[new_y][new_x] = self.hero
                 self.hero.update_cords(new_y, new_x)
@@ -56,7 +57,19 @@ class Map:
                 print('Obstacle in the way!')
                 return False
             elif self.map[new_y][new_x] == Map.TREASURE:
-                # TODO: implement treasuer event
+                print('Found treasure!')
+                treasure = TreasureChest().treasure
+                print('Found %s!' % treasure.__class__.__name__)
+                self.hero.take_damage(50)
+                if isinstance(treasure, Potion):
+                    health_amount, mana_amount = treasure.use()
+                    self.hero.take_healing(health_amount)
+                    self.hero.take_mana(mana_amount)
+                if isinstance(treasure, Weapon):
+                    self.hero.equip(treasure)
+                if isinstance(treasure, Spell):
+                    self.hero.learn(treasure)
+                print(self.hero.__dict__)
                 return False
             elif self.map[new_y][new_x] == Map.ENEMY:
                 # TODO: implement enemy event
@@ -68,6 +81,12 @@ class Map:
             # print('Edge of the maze reached!')
             return False
 
+    def attack(by=None):
+        print(by)
+        attack_by_weapon()
+
+    def attack_by_weapon():
+        print(self.hero__dict__)
 
     @classmethod
     def from_file(cls):
@@ -84,5 +103,6 @@ if __name__ == '__main__':
     m.spawn(h)
     print(m)
     print(m.move_hero('right'))
-    print(m)
+    print(m.move_hero('down'))
+    print(m.hero.attack(by="weapon"))
 
