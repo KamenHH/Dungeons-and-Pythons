@@ -44,7 +44,7 @@ class Map:
         new_direction = Map.DIRECTIONS.get(direction, (0, 0))
         new_y, new_x = new_direction[0] + prev_y_hero, new_direction[1] + prev_x_hero
         if new_x < 0 or new_y < 0:
-            print('Can\t move in that direction!')
+            print('Can\'t move in that direction!')
             return False
         try:
             if self.map[new_y][new_x] == Map.FREE_SPACE:
@@ -65,7 +65,7 @@ class Map:
                 self.found_gateway()
                 return False
         except IndexError:
-            print('Can\t move in that direction!')
+            print('Can\'t move in that direction!')
             return False
 
     def update_hero(self, prev_y, prev_x, new_y, new_x):
