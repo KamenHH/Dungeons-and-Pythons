@@ -70,6 +70,10 @@ class Spell(MeansOfAttack):
         super().__init__(name, damage, scope)
         self._mana_cost = mana_cost
 
+    @property
+    def mana_cost(self):
+        return self._mana_cost
+
     def use(self):
         return self._damage, self._scope, self._mana_cost
 
