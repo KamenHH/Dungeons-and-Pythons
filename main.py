@@ -25,6 +25,7 @@ def main():
             print(m)
         elif user_input in ['right', 'left', 'down', 'up']:
             m.move_hero(user_input)
+            print(m)
         elif user_input == '':
             print(ui.get_menu())
 
