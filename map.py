@@ -1,6 +1,8 @@
 import os
 import pdb
 from collectables import TreasureChest, Potion, Weapon, Spell
+from fight import Fight
+from sprites import Hero, Enemy
 class Map:
     LEVELS_PATH = 'Levels'
     DIRECTIONS = {
@@ -17,6 +19,7 @@ class Map:
 
     def __init__(self, matrix):
         self.map = matrix
+        self.enemies = []
 
     def __str__(self):
         # equivalent to print_map()
@@ -39,6 +42,17 @@ class Map:
                     self.map[y][x] = hero
                 return
 
+    def spawn_enemies(self, enemies):
+        self.enemies = enemies
+        index_of_enemy = 0
+        for index_row, row in enumerate(self.map):
+            for index_cell, cell in enumerate(row):
+                if cell == 'E':
+                    enemy = enemies[index_of_enemy]
+                    enemy.x_coord = index_row
+                    enemy.y_coord = index_cell
+                    self.map[index_row][index_cell] = enemy
+                    index_of_enemy += 1
 
     def move_hero(self, direction):
         prev_y_hero, prev_x_hero  = self.hero.y_coord, self.hero.x_coord
@@ -48,7 +62,7 @@ class Map:
             return False
         try:
             if self.map[new_y][new_x] == Map.FREE_SPACE:
-                pdb.set_trace()
+                # pdb.set_trace()
                 self.map[prev_y_hero][prev_x_hero] = Map.FREE_SPACE
                 self.map[new_y][new_x] = self.hero
                 self.hero.update_cords(new_y, new_x)
@@ -71,8 +85,8 @@ class Map:
                     self.hero.learn(treasure)
                 print(self.hero.__dict__)
                 return False
-            elif self.map[new_y][new_x] == Map.ENEMY:
-                # TODO: implement enemy event
+            elif self.map[new_y][new_x] == Map.ENEMY or isinstance(self.map[new_y][new_x], Enemy):
+                self.hero_attack()
                 return False
             elif self.map[new_y][new_x] == Map.GATEWAY:
                 # TODO: implement gateway event
@@ -81,12 +95,10 @@ class Map:
             # print('Edge of the maze reached!')
             return False
 
-    def attack(by=None):
-        print(by)
-        attack_by_weapon()
-
-    def attack_by_weapon():
-        print(self.hero__dict__)
+    def hero_attack(self, by=None):
+        closest_enemy = min(enemies, key=lambda enemy: self.hero.distance_from(enemy))
+        fight = Fight(self.hero, closest_enemy)
+        fight.process()
 
     @classmethod
     def from_file(cls):
@@ -96,13 +108,24 @@ class Map:
 
 
 if __name__ == '__main__':
-    from sprites import Hero
     m = Map.from_file()
     print(m)
     h = Hero(name='Jon', title='Assasin', health=100, mana=125, mana_regeneration_rate=2)
     m.spawn(h)
-    print(m)
+    enemies = [
+        Enemy(health=100, mana=200, damage=50), 
+        Enemy(health=500, mana=100, damage=20), 
+        Enemy(health=50, mana=20, damage=300)
+    ]
+    m.spawn_enemies(enemies)
+    # for row in m.map:
+    #     for cell in row:
+    #         print(cell)
+
     print(m.move_hero('right'))
     print(m.move_hero('down'))
-    print(m.hero.attack(by="weapon"))
-
+    print(m.move_hero('down'))
+    print(m.move_hero('down'))
+    print(m.move_hero('right'))
+    m.hero_attack()
+    # print(m.hero.attack(by="weapon"))

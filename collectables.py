@@ -5,9 +5,8 @@ import sys
 class TreasureChest:
     """Used to load and parse the collectables.json, 
     pick a random item and create an object instance from the parsed data."""
-    # treasures = parse_json()
     def __init__(self):
-        
+        self.treasures = __class__.parse_json()
         self.treasure = __class__.parse_object()
 
     def __str__(self):
@@ -43,9 +42,12 @@ class MeansOfAttack:
         self._scope = scope
 
     def __str__(self):
-        return f'{self._name}'
+        pass
+        # this doesn't work for me
+        # return f'{self._name}'
 
-    def get_damage(self):
+    @property
+    def damage(self):
         return self._damage
 
     def use(self):
@@ -69,6 +71,9 @@ class Spell(MeansOfAttack):
     def use(self):
         return self._damage, self._scope, self._mana_cost
 
+    @property
+    def mana_cost():
+        return self._mana_cost
 
 class Potion:
     """Restores some amount of health, mana, or both, to the hero in play."""

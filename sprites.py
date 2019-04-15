@@ -1,3 +1,6 @@
+import pdb
+import json
+import math
 class Sprite:
     def __init__(self, health, mana):
         self._curr_health = health
@@ -46,9 +49,10 @@ class Sprite:
         """Returns true if current health is greater than 0."""
         return self._curr_health > 0
 
-    def can_cast(self, spell_cost):
-        """Returns true if current mana is greater than 0."""
-        return self._curr_mana > spell_cost 
+    def can_cast(self):
+        """Returns true if current mana is greater than 0 and enougf to cast spell."""
+        spell = self.__dict__.get('spell', 0)
+        return spell != 0 and self.get_mana() >= spell.mana_cost
 
     def take_damage(self, damage):
         """Decreases sprite's health based on the given damage factor."""
@@ -57,6 +61,14 @@ class Sprite:
             self._curr_health = 0
         else:
             self._curr_health = remaining_health
+
+    def distance_from(self, other):
+        return math.fabs(self.y_coord - other.y_coord) \
+             + math.fabs(self.x_coord - other.x_coord)
+
+    # use lose_health instead of take_damage to make it clearer what method does
+    def lose_health(self, damage):
+        self.take_damage(damage)
 
     def take_healing(self, heal_amount):
         """Restores sprite's health, if new value doesn't exceed max_health"""
@@ -72,7 +84,7 @@ class Sprite:
             self._curr_mana = 0
         else:
             self._curr_mana = remaining_mana
-
+            
     def take_mana(self, restore_amount):
         """Restores sprite's mana, if new value doesn't exceed max_mana"""
         new_mana = self._curr_mana + restore_amount
@@ -81,14 +93,43 @@ class Sprite:
         else:
             self._curr_mana = new_mana
 
+    # use increase_mana instead of take_mana to make it clearer what method does
+    def increase_mana(self, restore_amount):
+        self.take_mana(restore_amount)
+
     def attack(self, by=None):
-        if self._curr_mana == 0:
-            damage, mana_cost = self.__dict__.get('weapon', 0).use()
+        if by == 'weapon':
+            return self.attack_by_weapon()
+        elif by == 'magic' or by == 'spell':
+            return self.attack_by_spell()
         else:
-            damage, mana_cost = self.__dict__.get(by, 0).use()
-            if mana_cost != 0:
-                self.spend_mana(mana_cost)
-        return damage
+            raise ValueError("No weapon provided")
+
+    def attack_points(self, by='None'):
+        return self.attack(by)
+
+    def attack_by_weapon(self):
+        weapon = self.__dict__.get('weapon', 0)
+        if weapon == 0:
+            return 0
+        else:
+           return weapon.damage
+
+    def attack_by_spell(self):
+        if self.can_cast():
+            spell = self.__dict__.get('spell', 0)
+            return spell.damage
+        return 0
+    # I didn't understand that logic so I wrote another method above 
+    # def attack(self, by=None):
+    #     # pdb.set_trace()
+    #     if self._curr_mana == 0:
+    #         damage, mana_cost = self.__dict__.get('weapon', 0).use()
+    #     else:
+    #         damage, mana_cost = self.__dict__.get(by, 0).use()
+    #         if mana_cost != 0:
+    #             self.spend_mana(mana_cost)
+    #     return damage
 
     def update_cords(self, new_y, new_x):
         self.y_coord = new_y
@@ -113,7 +154,7 @@ class Hero(Sprite):
     def __init__(self, name, title, health, mana, mana_regeneration_rate):
         super().__init__(health, mana)
         self._name = name
-        self._tile = title
+        self._title = title
         self._mana_regeneration_rate = mana_regeneration_rate
 
     def __str__(self):
@@ -123,8 +164,9 @@ class Hero(Sprite):
         return str(self)
 
     def known_as(self):
+        pass
         """Returns hero's name and title."""
-        return f'{self._name} the {self._tile}'
+        # return f'{self._name} the {self._tile}'
 
     def equip(self, w):
         """Equips a new weapon."""
@@ -136,12 +178,17 @@ class Hero(Sprite):
 
 
 class Enemy(Sprite):
+    # TODO Parse enemy object while parsing map
+    # Enemy should also have coordinates, same as Hero
     def __init__(self, health, mana, damage):
         super().__init__(health, mana)
         self._damage = damage
     
+    # def __str__(self):
+    #     return 'E'
+
     def __str__(self):
-        return 'E'
+        return json.dumps(self.__dict__)
 
     def __repr__(self):
         return str(self)
