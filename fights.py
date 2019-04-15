@@ -13,9 +13,7 @@ class Fight:
 
     def process(self):
         if self.distance() == 1:
-            print('A fight is started between our Hero(health={}, mana={}) and Enemey(health={}, mana={}, damage={})'
-                .format(self.hero.get_health(), self.hero.get_mana(), self.enemy.get_health(), self.enemy.get_mana(), self.enemy.damage))
-
+            print(f'A fight has started between {self.hero.known_as()} and Enemy')
             while self.hero.is_alive() and self.enemy.is_alive():
                 self.hero_attacks_enemy()
                 self.enemy_attacks_hero()
