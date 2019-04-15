@@ -20,6 +20,7 @@ def main():
             print(m.hero.get_status())
         elif user_input == 'attack':
             m.hero_attack()
+            m.clear_enemy()
         elif user_input == 'map':
             print(m)
         elif user_input in ['right', 'left', 'down', 'up']:
