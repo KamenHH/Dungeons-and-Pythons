@@ -1,19 +1,31 @@
-from collectables import Weapon, Spell
+from collectables import Weapon, TreasureChest
 from sprites import Hero
-import time
+from map import Map
+import ui
 
 
 def main():
-    h = Hero('Billy', 'Wizard', health=250, mana=100, mana_regeneration_rate=2)
-    w = Weapon(name='Axe', damage=15)
-    s = Spell(name='Firball', damage=25, mana_cost=20)
-    h.equip(w)
-    h.learn(s)
+    m = Map()
+    m.spawn(Hero('Billy', 'Wizard', health=250, mana=100, mana_regeneration_rate=2))
+    w = Weapon(name='Keyboard', damage=15, scope=1)
+    m.hero.equip(w)
+    m.spawn_enemies()
+    TreasureChest.parse_json()
+    print(ui.intro(m.hero.known_as()))
+    print(ui.get_menu())
+
     while True:
-        print(h.attack(by='spell'))
-        print(h.get_mana())
-        print('------')
-        time.sleep(0.5)
+        user_input = ui.parse_user_input()
+        if user_input == 'status':
+            print(m.hero.get_status())
+        elif user_input == 'attack':
+            m.hero_attack()
+        elif user_input == 'map':
+            print(m)
+        elif user_input in ['right', 'left', 'down', 'up']:
+            m.move_hero(user_input)
+        elif user_input == '':
+            print(ui.get_menu())
 
 
 if __name__ == '__main__':
