@@ -12,29 +12,30 @@ class Fight:
         return self._enemy
 
     def process(self):
-        print('A fight is started between our Hero(health={}, mana={}) and Enemey(health={}, mana={}, damage={})'
-            .format(self.hero.get_health(), self.hero.get_mana(), self.enemy.get_health(), self.enemy.get_mana(), self.enemy.damage))
+        if self.distance() == 1:
+            print('A fight is started between our Hero(health={}, mana={}) and Enemey(health={}, mana={}, damage={})'
+                .format(self.hero.get_health(), self.hero.get_mana(), self.enemy.get_health(), self.enemy.get_mana(), self.enemy.damage))
 
-        while self.hero.is_alive() and self.enemy.is_alive():
-            self.hero_attacks_enemy()
-            self.enemy_attacks_hero()
+            while self.hero.is_alive() and self.enemy.is_alive():
+                self.hero_attacks_enemy()
+                self.enemy_attacks_hero()
+        else:
+            print("No enemies in nearby!")
 
     def hero_attacks_enemy(self):
         if self.hero.is_alive() is False:
             return
-        distance = self.distance()
-        if distance == 1:
-            damage_by_weapon = self.hero.attack_points(by='weapon')
-            damage_by_spell = self.hero.attack_points(by='spell')
-            if damage_by_weapon > damage_by_spell:
-                print(f'{self.hero.known_as()} deals {damage_by_weapon} to Enemy, using {self.hero.weapon}.')
-                self.enemy.lose_health(damage_by_weapon)
-            else:
-                print(f'{self.hero.known_as()} deals {damage_by_weapon} to Enemy, using {self.hero.spell}.')
-                self.enemy.lose_health(damage_by_spell)
-                mana_for_spell = self.hero.__dict__.get('spell', 0).mana_cost
-                self.hero.spend_mana(mana_for_spell)
-            print(f'Enemy left with {self.enemy.get_health()} health points.')
+        damage_by_weapon = self.hero.attack_points(by='weapon')
+        damage_by_spell = self.hero.attack_points(by='spell')
+        if damage_by_weapon > damage_by_spell:
+            print(f'{self.hero.known_as()} deals {damage_by_weapon} to Enemy, using {self.hero.weapon}.')
+            self.enemy.lose_health(damage_by_weapon)
+        else:
+            print(f'{self.hero.known_as()} deals {damage_by_weapon} to Enemy, using {self.hero.spell}.')
+            self.enemy.lose_health(damage_by_spell)
+            mana_for_spell = self.hero.__dict__.get('spell', 0).mana_cost
+            self.hero.spend_mana(mana_for_spell)
+        print(f'Enemy left with {self.enemy.get_health()} health points.')
 
     def enemy_attacks_hero(self):
         if self.enemy.is_alive() is False:
