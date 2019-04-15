@@ -95,6 +95,7 @@ class Map:
             self.hero.increase_mana(self.hero.max_mana)
             self.spawn(self.hero)
             print("You have reached the end of the level!\nBrace yourself for the upcoming one..")
+            print(self)
         except IndexError:
             print('Congratulations, you have reached the end ot the dungeon and vanquished all the pythons!\n'
                   f'{self.hero.known_as()}, you are a TRUE hero!')
