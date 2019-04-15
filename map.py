@@ -48,33 +48,25 @@ class Map:
         new_y, new_x = new_direction[0] + prev_y_hero, new_direction[1] + prev_x_hero
         if new_x < 0 or new_y < 0:
             print('Can\'t move in that direction!')
-            return False
+            return 
         try:
             if self.map[new_y][new_x] == Map.FREE_SPACE:
                 self.update_hero(prev_y_hero, prev_x_hero, new_y, new_x)
-                return True
             elif self.map[new_y][new_x] == Map.OBSTACLE:
                 print('Obstacle in the way!')
-                return False
             elif self.map[new_y][new_x] == Map.TREASURE:
                 treasure = TreasureChest().treasure
                 print(f'Found {treasure._name}')
                 self.determine_treasure(treasure)
                 self.update_hero(prev_y_hero, prev_x_hero, new_y, new_x)
-                # TODO: implement treasure event
-                return True
             elif isinstance(self.map[new_y][new_x], Enemy):
                 self.hero_attack()
                 self.update_hero(prev_y_hero, prev_x_hero, new_y, new_x)
-                # e = Enemy.from_json('enemies.json')
-                # b = battles.Battle(self.hero, e).start_battle()
-                return False
             elif self.map[new_y][new_x] == Map.GATEWAY:
                 self.found_gateway()
-                return False
         except IndexError:
             print('Can\'t move in that direction!')
-            return False
+
 
     def update_hero(self, prev_y, prev_x, new_y, new_x):
         self.map[prev_y][prev_x] = Map.FREE_SPACE
