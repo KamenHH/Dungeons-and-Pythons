@@ -82,6 +82,12 @@ class Map:
         self.hero.update_cords(new_y, new_x)
         self.hero.increase_mana(self.hero.mana_regeneration_rate)
 
+    def clear_enemy(self):
+        for row in self.map:
+            for cell in row:
+                if isinstance(cell, Enemy) and not cell.is_alive():
+                    self.map[self.map.index(row)][row.index(cell)] = Map.FREE_SPACE
+
     def found_gateway(self):
         try:
             self.map = Map.from_file(Map.LEVELS.pop(0))
@@ -111,8 +117,6 @@ class Map:
             for index_cell, cell in enumerate(row):
                 if cell == 'E':
                     enemy = self.enemies[index_of_enemy]
-                    # enemy.x_coord = index_row
-                    # enemy.y_coord = index_cell
                     enemy.x_coord = index_cell
                     enemy.y_coord = index_row
                     self.map[index_row][index_cell] = enemy
